@@ -14,7 +14,7 @@ try:
     # pip install blessings
     from blessings import Terminal
 except ImportError, e:
-    class Terminal:
+    class Terminal(object):
         def __getattr__(self, name):
             def _missing(*args, **kwargs):
                 return ''.join(args) or None
