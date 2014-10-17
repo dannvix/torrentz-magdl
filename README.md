@@ -2,6 +2,10 @@
 Command-line downloader (via magnet link) for the holy _Torrentz_.
 
 
+## Screenshot
+![torrentz-magdl screenshot](https://raw.github.com/dannvix/torrentz-magdl/master/screenshot.png)
+
+
 ## One-click Downloer
 * Given keywords, and search for _Torrentz_ resources
 * Retrieve Magnet links, and open for download
@@ -12,7 +16,7 @@ Command-line downloader (via magnet link) for the holy _Torrentz_.
 * BitTorrent client with Magnet support
 
 
-## 使用方式
+## Usage
 * Install to somewhere like `/usr/local/bin`
 * Run `torrentz-magdl <keyword>`
 
