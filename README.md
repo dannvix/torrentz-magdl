@@ -6,7 +6,7 @@ Command-line downloader (via magnet link) for the holy _Torrentz_.
 ![torrentz-magdl screenshot](https://raw.github.com/dannvix/torrentz-magdl/master/screenshot.png)
 
 
-## One-click Downloer
+## One-click Downloader
 * Given keywords, and search for _Torrentz_ resources
 * Retrieve Magnet links, and open for download
 
