@@ -9,6 +9,7 @@ Command-line downloader (via magnet link) for the holy _Torrentz_.
 ## One-click Downloader
 * Given keywords, and search for _Torrentz_ resources
 * Retrieve Magnet links, and open for download
+* Multiple downlaods
 
 
 ## Dependency
