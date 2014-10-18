@@ -52,11 +52,12 @@ def query(keyword, num=10):
 def ask(choices):
     for idx, item in enumerate(choices):
         num = t.red(str(idx+1).rjust(2))
-        title = t.white(item['title'].ljust(70))
+        title = t.white(item['title'].ljust(72))
         date = t.yellow(item['date'].rjust(10))
+        size = t.cyan(item['size'].rjust(10))
         seed = t.blue(item['seed'].rjust(6))
         peer = t.green(item['peer'].rjust(6))
-        print '%s. %s %s %s %s' % (num, title, date, seed, peer)
+        print '%s. %s %s %s %s %s' % (num, title, date, size, seed, peer)
     answers = raw_input('What items do you want? (seperated by commas) [1] ')
     if answers: return map(lambda x: int(x)-1, answers.split(r','))
     else: return[0]
