@@ -25,8 +25,8 @@ Command-line downloader (via magnet link) for the holy _Torrentz_.
 ## Get Your Hands Dirty
 It'd be fun to integrate `download()` with other projects like:
 
-    * [torrent-mount](https://github.com/mafintosh/torrent-mount) 
-    * [peerflix](https://github.com/mafintosh/peerflix)
+* [torrent-mount](https://github.com/mafintosh/torrent-mount) -- mount magnet link as a filesystem via FUSE
+* [peerflix](https://github.com/mafintosh/peerflix) -- stream torrent content to VLC
 
 Thanks to [@clkao](https://github.com/clkao) for the brilliant ideas!
 
