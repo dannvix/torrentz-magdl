@@ -12,8 +12,9 @@ Command-line downloader (via magnet link) for the holy _Torrentz_.
 
 
 ## Dependency
-* Python [`requests`](http://docs.python-requests.org/en/latest/) package
+* Python >= 2.7
 * BitTorrent client with Magnet support
+    - We use `webbrowser.open('magnet:...')`
 
 
 ## Usage

@@ -5,11 +5,10 @@
 import re
 import sys
 import urllib
+import urllib2
 import webbrowser
 from HTMLParser import HTMLParser
 
-# pip install requests
-import requests
 try:
     # pip install blessings
     from blessings import Terminal
@@ -28,27 +27,26 @@ t = Terminal()
 
 def query(keyword, num=10):
     url = 'https://torrentz.eu/search'
-    params = dict(f=keyword)
-    response = requests.get(url, params=params)
-    if response.status_code == requests.codes.ok:
-        html = response.text
-        items = [m.groupdict() for m in re.finditer(r'<dl><dt><a href="/(?P<sha1>[0-9a-f]+)">(?P<title>.*)</a>', html)]
-        dates = re.findall(r'<span class="a"><span title="[^"]+">(.*)</span></span>', html)
-        metas = re.findall(r'<span class="[sud]+">([^<]*)</span>', html) # [size, seeds, peers]
-        results = []
-        for idx, item in enumerate(items[:num]):
-            title = h.unescape(re.sub(r'</?b>', '', item['title']))
-            results.append(dict(
-                sha1=item['sha1'],
-                title=title,
-                date=dates[idx],
-                size=metas[idx*3],
-                seed=metas[idx*3+1],
-                peer=metas[idx*3+2]))
-        return results
-    else:
-        raise Exception('HTTP status_code=%s' % response.status_code)
-    return []
+    params = urllib.urlencode(dict(f=keyword))
+    request = '%s?%s' % (url, params)
+    response = urllib2.urlopen(request)
+    html = response.read()
+
+    # parsing
+    items = [m.groupdict() for m in re.finditer(r'<dl><dt><a href="/(?P<sha1>[0-9a-f]+)">(?P<title>.*)</a>', html)]
+    dates = re.findall(r'<span class="a"><span title="[^"]+">(.*)</span></span>', html)
+    metas = re.findall(r'<span class="[sud]+">([^<]*)</span>', html) # [size, seeds, peers]
+    results = []
+    for idx, item in enumerate(items[:num]):
+        title = h.unescape(re.sub(r'</?b>', '', item['title']))
+        results.append(dict(
+            sha1=item['sha1'],
+            title=title,
+            date=dates[idx],
+            size=metas[idx*3],
+            seed=metas[idx*3+1],
+            peer=metas[idx*3+2]))
+    return results
 
 
 def ask(choices):
