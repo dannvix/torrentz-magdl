@@ -63,10 +63,21 @@ def ask(choices):
 
 
 def download(items):
-    # FIXME: random.choice(torrent host) to grab magnet links with tracker urls
+    def _build_magnet_uri(item):
+        # retrieve tracker list from Torrentz
+        url = 'https://torrentz.eu/%s' % item['sha1']
+        html = urllib2.urlopen(url).read()
+        trackers = re.findall(r'<a[^<>]*href="/tracker[^<>]*"[^<>]*>(?P<tracker>[^<>]*)</a>', html)
+
+        # build magnet links
+        dn = urllib.urlencode(dict(dn=item['title']))
+        trs = '&'.join(map(lambda t: urllib.urlencode(dict(tr=t)), trackers))
+        uri = 'magnet:?xt=urn:btih:%s&%s&%s' % (item['sha1'], dn, trs)
+        return uri
+
     for item in items:
-        dn = urllib.urlencode({'dn': item['title']})
-        uri = 'magnet:?xt=urn:btih:%s&%s' % (item['sha1'], dn)
+        print 'Downloading... %s' % (item['title'])
+        uri = _build_magnet_uri(item)
         webbrowser.open(uri)
 
 
