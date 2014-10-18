@@ -52,7 +52,7 @@ def query(keyword, num=10):
 def ask(choices):
     for idx, item in enumerate(choices):
         num = t.red(str(idx+1).rjust(2))
-        title = t.white(item['title'].ljust(72))
+        title = t.white((item['title'][:80] + (item['title'][80:] and '..')).ljust(82)) # truncate
         date = t.yellow(item['date'].rjust(10))
         size = t.cyan(item['size'].rjust(10))
         seed = t.blue(item['seed'].rjust(6))
