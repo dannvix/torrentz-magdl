@@ -24,9 +24,11 @@ Command-line downloader (via magnet link) for the holy _Torrentz_.
 
 ## Get Your Hands Dirty
 It'd be fun to integrate `download()` with other projects like:
+
     * [torrent-mount](https://github.com/mafintosh/torrent-mount) 
     * [peerflix](https://github.com/mafintosh/peerflix)
-Thanks to @clkao for the brilliant ideas!
+
+Thanks to [@clkao](https://github.com/clkao) for the brilliant ideas!
 
 
 ## MIT License
