@@ -7,49 +7,72 @@ import sys
 import urllib
 import urllib2
 import webbrowser
-from HTMLParser import HTMLParser
 
 try:
     # pip install blessings
     from blessings import Terminal
-except ImportError, e:
+except ImportError:
+    # fallback
     class Terminal(object):
         def __getattr__(self, name):
             def _missing(*args, **kwargs):
                 return ''.join(args) or None
             return _missing
 
+try:
+    # pip install lxml
+    import lxml.html
+    def parse_torrentz(html, item_limit=10):
+        results = []
+        domtree = lxml.html.fromstring(html)
+        for item in domtree.cssselect('dl'):
+            try:
+                a = item.cssselect('dt a')[0]
+                dd = item.cssselect('dd')[0]
+                results.append(dict(
+                    sha1=re.findall(r'^/(?P<sha1>[0-9a-f]+)$', a.get('href'))[0],
+                    title=''.join(list(a.itertext())),
+                    date=''.join(list(dd.cssselect('span.a')[0].itertext())),
+                    size=dd.cssselect('span.s')[0].text,
+                    seed=dd.cssselect('span.u')[0].text,
+                    peer=dd.cssselect('span.d')[0].text))
+            except IndexError:
+                next
+        return results[:item_limit]
+except ImportError:
+    # fallback
+    from HTMLParser import HTMLParser
+    h = HTMLParser()
+    def parse_torrentz(html, item_limit=10):
+        items = [m.groupdict() for m in re.finditer(r'<dl><dt><a href="/(?P<sha1>[0-9a-f]+)">(?P<title>.*)</a>', html)]
+        dates = re.findall(r'<span class="a"><span title="[^"]+">(.*)</span></span>', html)
+        metas = re.findall(r'<span class="[sud]+">([^<]*)</span>', html) # [size, seeds, peers]
+        results = []
+        for idx, item in enumerate(items[:item_limit]):
+            title = h.unescape(re.sub(r'</?b>', '', item['title']))
+            results.append(dict(
+                sha1=item['sha1'],
+                title=title,
+                date=dates[idx],
+                size=metas[idx*3],
+                seed=metas[idx*3+1],
+                peer=metas[idx*3+2]))
+        return results
 
-# globals
-h = HTMLParser()
-t = Terminal()
 
-
-def query(keyword, num=10):
+def query(keyword, limit=10):
     url = 'https://torrentz.eu/search'
     params = urllib.urlencode(dict(f=keyword))
     request = '%s?%s' % (url, params)
     response = urllib2.urlopen(request)
     html = response.read()
 
-    # parsing
-    items = [m.groupdict() for m in re.finditer(r'<dl><dt><a href="/(?P<sha1>[0-9a-f]+)">(?P<title>.*)</a>', html)]
-    dates = re.findall(r'<span class="a"><span title="[^"]+">(.*)</span></span>', html)
-    metas = re.findall(r'<span class="[sud]+">([^<]*)</span>', html) # [size, seeds, peers]
-    results = []
-    for idx, item in enumerate(items[:num]):
-        title = h.unescape(re.sub(r'</?b>', '', item['title']))
-        results.append(dict(
-            sha1=item['sha1'],
-            title=title,
-            date=dates[idx],
-            size=metas[idx*3],
-            seed=metas[idx*3+1],
-            peer=metas[idx*3+2]))
-    return results
+    items = parse_torrentz(html, item_limit=limit)
+    return items
 
 
 def ask(choices):
+    t = Terminal()
     for idx, item in enumerate(choices):
         num = t.red(str(idx+1).rjust(2))
         title = item['title'].decode('utf-8')
