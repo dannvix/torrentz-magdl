@@ -61,7 +61,7 @@ except ImportError:
 
 
 def query(keyword, limit=10):
-    url = 'https://torrentz.eu/search'
+    url = 'https://torrentz.com/search'
     params = urllib.urlencode(dict(f=keyword))
     request = '%s?%s' % (url, params)
     response = urllib2.urlopen(request)
@@ -90,7 +90,7 @@ def ask(choices):
 def download(items):
     def _build_magnet_uri(item):
         # retrieve tracker list from Torrentz
-        url = 'https://torrentz.eu/%s' % item['sha1']
+        url = 'https://torrentz.com/%s' % item['sha1']
         html = urllib2.urlopen(url).read()
         trackers = re.findall(r'<a[^<>]*href="/tracker[^<>]*"[^<>]*>(?P<tracker>[^<>]*)</a>', html)
 
