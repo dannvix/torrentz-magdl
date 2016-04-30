@@ -75,7 +75,8 @@ def ask(choices):
     t = Terminal()
     for idx, item in enumerate(choices):
         num = t.red(str(idx+1).rjust(2))
-        title = item['title'].decode('utf-8')
+        try: title = item['title'].decode('utf-8')
+        except: pass # item['title'] can be unicode or str
         title = t.white((title[:80] + (title[80:] and '..')).ljust(82)) # truncate
         date = t.yellow(item['date'].rjust(10))
         size = t.cyan(item['size'].rjust(10))
